@@ -1,9 +1,9 @@
-﻿name: DriveSummary
+name: DriveSummary
 
 on:
   schedule:
-    - cron: '0 13 * * 1,2'   # 9 AM ET
-    - cron: '0 21 * * 1,2'   # 5 PM ET
+    - cron: '0 13 * * 1,2'   # Monday & Tuesday 9 AM ET
+    - cron: '0 21 * * 1,2'   # Monday & Tuesday 5 PM ET
   workflow_dispatch:
 
 jobs:
@@ -24,8 +24,8 @@ jobs:
 
       - name: Run DriveSummary
         env:
-          TOMTOM_API_KEY: $\{{ secrets.TOMTOM_API_KEY \}\}
-          TICKETMASTER_API_KEY: $\{{ secrets.TICKETMASTER_API_KEY \}\}
-          NTFY_TOPIC: "DriveSummary"
-          SEND_NOTIFICATIONS: "1"
+          TOMTOM_API_KEY: ${{ secrets.TOMTOM_API_KEY }}
+          TICKETMASTER_API_KEY: ${{ secrets.TICKETMASTER_API_KEY }}
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          SEND_NOTIFICATIONS: ${{ secrets.SEND_NOTIFICATIONS }}
         run: python drive_summary_final.py
