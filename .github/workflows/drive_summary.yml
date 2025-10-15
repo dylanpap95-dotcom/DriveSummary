@@ -1,0 +1,23 @@
+name: Drive Summary
+
+on:
+  workflow_dispatch:          # Manual run button
+  schedule:
+    - cron: "0 13 * * 1,2"    # Monday & Tuesday 9 AM EDT (13 UTC)
+    - cron: "0 21 * * 1,2"    # Monday & Tuesday 5 PM EDT (21 UTC)
+
+jobs:
+  drive_summary:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run Drive Summary Script
+        env:
+          TOMTOM_API_KEY: ${{ secrets.TOMTOM_API_KEY }}
+          OPENWEATHER_API_KEY: ${{ secrets.OPENWEATHER_API_KEY }}
+          TICKETMASTER_API_KEY: ${{ secrets.TICKETMASTER_API_KEY }}
+        run: python drive_summary.py
