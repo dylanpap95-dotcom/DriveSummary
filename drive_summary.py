@@ -89,6 +89,33 @@ def get_ticketmaster_events(lat, lon):
 def main():
     to_work = get_travel_time(HOME_LAT, HOME_LON, WORK_LAT, WORK_LON)
     to_home = get_travel_time(WORK_LAT, WORK_LON, HOME_LAT, HOME_LON)
-
     alerts = get_weather_alerts(HOME_LAT, HOME_LON)
-    events = get_ticketmaster_e
+    events = get_ticketmaster_events(HOME_LAT, HOME_LON)
+
+    msg = [
+        "🚗 **Drive Summary**",
+        f"To work: {fmt_dur(to_work)}",
+        f"To home: {fmt_dur(to_home)}"
+    ]
+
+    if alerts:
+        msg.append("\n🌧️ **Weather Alerts:**")
+        for a in alerts:
+            ev = a.get("event", "Alert")
+            desc = (a.get("description") or "").strip().split("\n")[0]
+            msg.append(f"• {ev}: {desc}")
+
+    if events:
+        msg.append("\n🎟️ **Nearby Events:**")
+        for e in events:
+            msg.append(f"• {e}")
+
+    text = "\n".join(msg)
+    print("\n--- DRIVE SUMMARY TEST OUTPUT ---\n")
+    print(text)
+    print("\n---------------------------------\n")
+    # Commented out so it won’t ping your phone
+    # ntfy_post(text)
+
+if __name__ == "__main__":
+    main()
