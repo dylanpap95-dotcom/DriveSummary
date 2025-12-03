@@ -58,7 +58,6 @@ def safe_get_json(url, params=None):
 def send_ntfy_rich(title, message, priority="default", tags=None, actions=None):
     """Sends a rich notification using JSON payload to avoid header encoding issues."""
     payload = {
-        "topic": NTFY_TOPIC,
         "message": message,
         "title": title,
         "priority": priority,
@@ -67,8 +66,8 @@ def send_ntfy_rich(title, message, priority="default", tags=None, actions=None):
     }
     
     try:
-        # Use the root URL for JSON posts that include the 'topic' field
-        r = requests.post("https://ntfy.sh/", json=payload, timeout=REQUEST_TIMEOUT)
+        # Use the topic URL for JSON posts
+        r = requests.post(NTFY_URL, json=payload, timeout=REQUEST_TIMEOUT)
         r.raise_for_status()
     except Exception as e:
         print(f"[WARN] Could not send notification: {e}")
@@ -164,7 +163,8 @@ def get_events(lat, lon):
     for e in (data or {}).get("_embedded", {}).get("events", []):
         name = e.get("name")
         url = e.get("url")
-        events.append((name, url))
+        if url: # Only add if URL is valid
+            events.append((name, url))
     return events
 
 # ======================
