@@ -1,61 +1,23 @@
 # ==========================================
-# DriveSummary GitHub Setup Script (Fixed)
+# DriveSummary GitHub Setup Script
 # ==========================================
 
-$repoPath = "C:\Users\Dylan\Desktop\Reminders\DriveSummary"
+# Get the current directory where the script is running
+$repoPath = Get-Location
 $workflowDir = "$repoPath\.github\workflows"
 $workflowFile = "$workflowDir\drive_summary.yml"
 
-Write-Host "➡ Cleaning up old GitHub workflow files..." -ForegroundColor Yellow
-if (Test-Path $workflowDir) {
-    Remove-Item -Recurse -Force $workflowDir
+Write-Host "➡ Repo Path detected: $repoPath" -ForegroundColor Cyan
+
+# Check if .github/workflows exists, create if not
+if (-not (Test-Path $workflowDir)) {
+    New-Item -ItemType Directory -Force -Path $workflowDir | Out-Null
+    Write-Host "Created .github/workflows directory." -ForegroundColor Green
 }
-New-Item -ItemType Directory -Force -Path $workflowDir | Out-Null
-
-# ==========================================
-# Create new workflow YAML
-# ==========================================
-$workflowYML = @"
-name: DriveSummary
-
-on:
-  schedule:
-    - cron: '0 13 * * 1,2'   # 9 AM ET
-    - cron: '0 21 * * 1,2'   # 5 PM ET
-  workflow_dispatch:
-
-jobs:
-  drive_summary:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.11'
-
-      - name: Install dependencies
-        run: pip install requests
-
-      - name: Run DriveSummary
-        env:
-          TOMTOM_API_KEY: `$\{{ secrets.TOMTOM_API_KEY \}\}
-          TICKETMASTER_API_KEY: `$\{{ secrets.TICKETMASTER_API_KEY \}\}
-          NTFY_TOPIC: "DriveSummary"
-          SEND_NOTIFICATIONS: "1"
-        run: python drive_summary_final.py
-"@
-
-$workflowYML | Set-Content -Path $workflowFile -Encoding UTF8
-Write-Host "✅ Created new workflow file: $workflowFile" -ForegroundColor Green
 
 # ==========================================
 # Initialize Git (if needed)
 # ==========================================
-cd $repoPath
 if (-not (Test-Path "$repoPath\.git")) {
     Write-Host "Initializing Git repository..." -ForegroundColor Yellow
     git init
@@ -68,7 +30,7 @@ if (-not (Test-Path "$repoPath\.git")) {
 # ==========================================
 Write-Host "Committing and pushing to GitHub..." -ForegroundColor Yellow
 git add .
-git commit -m "Clean setup: new DriveSummary workflow"
+git commit -m "Upgrade to A+ version: Cleaned up code, added requirements, updated schedule"
 git push -u origin main --force
 Write-Host "✅ Successfully pushed to GitHub!" -ForegroundColor Green
 

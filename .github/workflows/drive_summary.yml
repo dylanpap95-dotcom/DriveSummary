@@ -2,8 +2,10 @@ name: DriveSummary
 
 on:
   schedule:
-    - cron: '0 13 * * 1,2'   # Monday & Tuesday 9 AM ET
-    - cron: '0 21 * * 1,2'   # Monday & Tuesday 5 PM ET
+    # 7:45 AM ET = 12:45 UTC (Standard Time)
+    - cron: '45 12 * * 1-5'
+    # 5:00 PM ET = 22:00 UTC (Standard Time)
+    - cron: '0 22 * * 1-5'
   workflow_dispatch:
 
 jobs:
@@ -20,12 +22,17 @@ jobs:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: pip install requests
+        run: pip install -r requirements.txt
 
       - name: Run DriveSummary
         env:
           TOMTOM_API_KEY: ${{ secrets.TOMTOM_API_KEY }}
           TICKETMASTER_API_KEY: ${{ secrets.TICKETMASTER_API_KEY }}
-          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
-          SEND_NOTIFICATIONS: ${{ secrets.SEND_NOTIFICATIONS }}
-        run: python drive_summary_final.py
+          NTFY_TOPIC: "DriveSummary"
+          SEND_NOTIFICATIONS: "1"
+          # Optional: Add your custom coordinates here if you want to override defaults
+          # HOME_LAT: ${{ secrets.HOME_LAT }}
+          # HOME_LON: ${{ secrets.HOME_LON }}
+          # WORK_LAT: ${{ secrets.WORK_LAT }}
+          # WORK_LON: ${{ secrets.WORK_LON }}
+        run: python main.py

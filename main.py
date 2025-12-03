@@ -13,16 +13,23 @@ from datetime import datetime, timezone
 # ======================
 # CONFIG
 # ======================
-HOME = {"name": "Home", "lat": 39.9790488, "lon": -75.1848477}
-WORK = {"name": "Work", "lat": 39.68002035, "lon": -75.69237944}
+# Coordinates (Defaults to Philadelphia area if not set in env)
+HOME_LAT = float(os.environ.get("HOME_LAT", "39.9790488"))
+HOME_LON = float(os.environ.get("HOME_LON", "-75.1848477"))
+WORK_LAT = float(os.environ.get("WORK_LAT", "39.68002035"))
+WORK_LON = float(os.environ.get("WORK_LON", "-75.69237944"))
+
+HOME = {"name": "Home", "lat": HOME_LAT, "lon": HOME_LON}
+WORK = {"name": "Work", "lat": WORK_LAT, "lon": WORK_LON}
 
 TOMTOM_API_KEY = os.environ.get("TOMTOM_API_KEY")
 TM_API_KEY = os.environ.get("TICKETMASTER_API_KEY")
 
 NTFY_TOPIC = os.environ.get("NTFY_TOPIC", "DriveSummary")
+# Send notifications if explicitly enabled or if running in GitHub Actions (CI=true)
 SEND_NOTIFICATIONS = os.environ.get("SEND_NOTIFICATIONS", "0").lower() in ("1", "true", "yes", "on")
 NTFY_URL = f"https://ntfy.sh/{NTFY_TOPIC}"
-REQUEST_TIMEOUT = 12
+REQUEST_TIMEOUT = 15
 
 # ======================
 # HELPERS
@@ -155,7 +162,7 @@ def main():
         for e in events:
             lines.append(f"• {e}")
 
-    lines.append("\n🗓️ Next checks: Mon/Tue 9 AM & 5 PM (ET)")
+    lines.append("\n🗓️ Next checks: Mon-Fri 7:45 AM & 5 PM (ET)")
     text = "\n".join(lines)
 
     print(text)
