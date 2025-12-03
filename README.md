@@ -4,12 +4,15 @@
 
 A lightweight, "forever free" Python tool that sends a daily commute summary to your phone via [ntfy.sh](https://ntfy.sh). It runs automatically on GitHub Actions, so you don't need a server.
 
-## ✨ Features
-*   **Commute Times**: Real-time traffic data from **TomTom** (Free tier).
-*   **Weather**: Current conditions from **Open-Meteo** (Free, no key needed).
-*   **Alerts**: Severe weather warnings from **NWS** (Free, no key needed).
-*   **Events**: Upcoming concerts/events near home from **Ticketmaster**.
-*   **Notifications**: Push notifications to your phone via **ntfy.sh** app (Free).
+## ✨ Features (Jarvis Edition)
+*   **🧠 Smart Traffic**: Compares current vs. historic traffic. If delay > 15 mins, sends a **High Priority** alert.
+*   **📊 Market Data**: Live daily % change for **S&P 500** and **Bitcoin**.
+*   **📰 Morning Brief**: Top 3 headlines from **NPR News**.
+*   **📱 Rich Notifications**:
+    *   **Action Buttons**: One-tap "Start Navigation" opens Google Maps.
+    *   **Visuals**: Green/Yellow/Red status based on traffic.
+    *   **Clickable Events**: Direct links to Ticketmaster events.
+*   **Forever Free**: Still uses only free API tiers.
 
 ## 🚀 Setup Guide
 
