@@ -66,6 +66,7 @@ def send_ntfy_rich(title, message, priority="default", tags=None, actions=None):
         headers["Actions"] = json.dumps(actions)
     
     try:
+        # Force UTF-8 encoding for the body to handle emojis
         r = requests.post(NTFY_URL, data=message.encode("utf-8"), headers=headers, timeout=REQUEST_TIMEOUT)
         r.raise_for_status()
     except Exception as e:
