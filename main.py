@@ -56,18 +56,19 @@ def safe_get_json(url, params=None):
         return None
 
 def send_ntfy_rich(title, message, priority="default", tags=None, actions=None):
-    """Sends a rich notification with buttons and styling."""
-    headers = {
-        "Title": title,
-        "Priority": priority,
-        "Tags": ",".join(tags) if tags else "",
+    """Sends a rich notification using JSON payload to avoid header encoding issues."""
+    payload = {
+        "topic": NTFY_TOPIC,
+        "message": message,
+        "title": title,
+        "priority": priority,
+        "tags": tags or [],
+        "actions": actions or []
     }
-    if actions:
-        headers["Actions"] = json.dumps(actions)
     
     try:
-        # Force UTF-8 encoding for the body to handle emojis
-        r = requests.post(NTFY_URL, data=message.encode("utf-8"), headers=headers, timeout=REQUEST_TIMEOUT)
+        # Use the root URL for JSON posts that include the 'topic' field
+        r = requests.post("https://ntfy.sh/", json=payload, timeout=REQUEST_TIMEOUT)
         r.raise_for_status()
     except Exception as e:
         print(f"[WARN] Could not send notification: {e}")
